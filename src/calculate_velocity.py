@@ -7,10 +7,13 @@ class Calculate:
         self.distance_meters = distance
 
     def calculate_velocity(self):
+        """Calcula la velocidad de la pelota si los tiempos fueron registrados correctamente."""
         if self.start_time is not None and self.end_time is not None:
             time_elapsed = self.end_time - self.start_time
-            velocity =  self.distance_meters  / time_elapsed
+            velocity = K.DISTANCE_METERS / time_elapsed
             print(f"Tiempo total: {time_elapsed:.3f} segundos")
             print(f"Velocidad media estimada: {velocity:.3f} m/s")
+            return velocity
         else:
             print("No se pudo calcular la velocidad. Verifica la detección.")
+            return None

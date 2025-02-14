@@ -1,0 +1,55 @@
+/* Estilos Generales */
+body {
+    font-family: "Arial", sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+/* Título Principal */
+.title {
+    font-size: 2.8em;
+    font-weight: bold;
+    color: #2C3E50;
+    margin-top: 30px;
+}
+
+/* Subtítulo */
+.subtitle {
+    font-size: 1.5em;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+}
+
+/* Texto de Carga */
+.loading-text {
+    font-size: 1.5em;
+    color: #3498db;
+    animation: blink 1s infinite;
+}
+
+/* Animación */
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+
+/* Botón centrado */
+.center {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+/* Resultado */
+.result {
+    font-size: 2em;
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+/* Pie de página */
+.footer {
+    text-align: center;
+    font-size: 0.9em;
+    color: gray;
+    margin-top: 40px;
+}

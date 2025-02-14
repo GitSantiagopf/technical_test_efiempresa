@@ -1,0 +1,13 @@
+[theme]
+base="dark"
+primaryColor="#27ae60"
+backgroundColor="#f4f4f4"
+secondaryBackgroundColor="#ecf0f1"
+textColor="#2C3E50"
+font="sans serif"
+
+[server]
+headless = true
+
+[ui]
+hideSidebarNav = true  # ✅ Oculta el menú lateral al inicio

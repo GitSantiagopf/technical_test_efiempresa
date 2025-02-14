@@ -1,0 +1,10 @@
+fastapi==0.115.8
+uvicorn==0.34.0
+streamlit==1.35.0
+opencv-python==4.8.0.76
+numpy==1.24.3
+requests==2.31.0
+pydantic==2.10.6
+ultralytics==8.0.181
+matplotlib==3.7.2
+scipy==1.11.2

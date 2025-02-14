@@ -5,46 +5,55 @@ from src.constants import Constants as K
 from src.calculate_velocity import Calculate
 
 class BallTracker:
-    def __init__(self):
-        self.video = cv2.VideoCapture(K.VIDEO_PATH)
-        self.fps = self.video.get(cv2.CAP_PROP_FPS)
+    def __init__(self, source=0, output_path=None):
+        self.video = cv2.VideoCapture(source)
+        if not self.video.isOpened():
+            raise ValueError(f"No se pudo abrir la fuente de video: {source}")
+
+        self.fps = self.video.get(cv2.CAP_PROP_FPS) or 30.0
         self.frame_width = int(self.video.get(cv2.CAP_PROP_FRAME_WIDTH))
         self.frame_height = int(self.video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.start_line = int(self.frame_height * 0.19)  
-        self.end_line = int(self.frame_height * 0.79) 
+        self.start_line = int(self.frame_height * 0.19)
+        self.end_line = int(self.frame_height * 0.79)
         self.start_time = None
         self.end_time = None
-        self.ball_crossed_end = False 
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        self.out = cv2.VideoWriter(K.OUTPUT_PATH, fourcc, self.fps, (self.frame_width, self.frame_height))
-        self.setup_window()
-    def setup_window(self):
-        cv2.namedWindow("Ball Detection", cv2.WINDOW_NORMAL)
-        cv2.resizeWindow("Ball Detection", 600, 1024)
-        
+        self.ball_crossed_end = False
+
+        # Configuración mejorada del VideoWriter
+        self.output_path = output_path if output_path else K.OUTPUT_PATH
+        fourcc = cv2.VideoWriter_fourcc(*'avc1')  # Codec más compatible
+        self.out = cv2.VideoWriter(self.output_path, fourcc, self.fps, (self.frame_width, self.frame_height))
+
     def process_frame(self):
         ret, frame = self.video.read()
         if not ret:
-            return None, None  # Evita error de desempaquetado
+            return None, None
 
+        # Procesamiento de color mejorado
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         lower_blue = np.array([90, 50, 50])
         upper_blue = np.array([130, 255, 255])
         mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        
+        # Operaciones morfológicas optimizadas
         kernel = np.ones((5, 5), np.uint8)
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
         mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+        
+        # Detección de contornos con filtro de área
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
         ball_position = None
+        
         for cnt in contours:
-            if cv2.contourArea(cnt) > 50:
+            area = cv2.contourArea(cnt)
+            if area > 50 and area < 5000:  # Filtro de tamaño realista
                 x, y, w, h = cv2.boundingRect(cnt)
                 cx, cy = x + w // 2, y + h // 2
                 ball_position = (cx, cy)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)
 
+        # Dibujo de líneas de referencia
         cv2.line(frame, (0, self.start_line), (self.frame_width, self.start_line), (255, 0, 0), 2)
         cv2.putText(frame, "Start (0m)", (10, self.start_line - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
         cv2.line(frame, (0, self.end_line), (self.frame_width, self.end_line), (255, 0, 0), 2)
@@ -53,38 +62,39 @@ class BallTracker:
         return frame, ball_position
 
     def run(self):
-        while self.video.isOpened():
-            result = self.process_frame()
-            if result is None:
-                break 
-            frame, ball_position = result
+        try:
+            while self.video.isOpened():
+                frame, ball_position = self.process_frame()
+                if frame is None:
+                    break
 
-            if ball_position is not None:
-                cx, cy = ball_position 
-                
-                if self.start_time is None and cy >= self.start_line:
-                    self.start_time = time.time()
-                    print(f"Inicio del recorrido: {self.start_time:.3f} segundos")
+                # Lógica de seguimiento de tiempo
+                if ball_position is not None:
+                    cx, cy = ball_position
+                    if self.start_time is None and cy >= self.start_line:
+                        self.start_time = time.time()
+                    if (self.start_time is not None 
+                        and self.end_time is None 
+                        and cy >= self.end_line 
+                        and not self.ball_crossed_end):
+                        self.end_time = time.time()
+                        self.ball_crossed_end = True
 
-                if (self.start_time is not None and self.end_time is None and 
-                    cy >= self.end_line and not self.ball_crossed_end):
-                    self.end_time = time.time()
-                    self.ball_crossed_end = True
-                    print(f"Final del recorrido (Primer cruce): {self.end_time:.3f} segundos")
-
-            if frame is not None:
                 self.out.write(frame)
-                cv2.imshow("Ball Detection", frame)
 
-            if (cv2.waitKey(1) & 0xFF == ord("q"))|(frame is None):
-                break
-
-        Calculate(start_time= self.start_time, end_time=self.end_time).calculate_velocity() 
-        self.cleanup()
+            # Cálculo final de velocidad
+            velocidad = Calculate(self.start_time, self.end_time).calculate_velocity() if self.start_time and self.end_time else None
+            
+            return velocidad
+            
+        finally:
+            # Liberación garantizada de recursos
+            self.cleanup()
 
     def cleanup(self):
-        self.video.release()
-        self.out.release()
+        if self.video.isOpened():
+            self.video.release()
+        if self.out.isOpened():
+            self.out.release()
         cv2.destroyAllWindows()
-        print(f"Procesamiento completado. Video guardado en {K.OUTPUT_PATH}")
-
+        time.sleep(0.5)  # Espera crítica para liberación de archivos
