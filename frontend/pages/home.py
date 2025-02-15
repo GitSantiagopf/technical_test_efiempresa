@@ -34,6 +34,6 @@ st.markdown("""
     ### 📌 ¿Tu cámara no está completamente alineada con la trayectoria?
     Si la perspectiva de la cámara no es totalmente paralela u ortogonal al plano, es recomendable aplicar **corrección de homografía** y definir las líneas de referencia para una mejor estimación de velocidad.
 """)
-st.markdown("[📖 Leer más sobre corrección de perspectiva](https://github.com/GitSantiagopf/technical_test_efiempresa/docs/homography.pdf)")
+st.markdown("[📖 Leer más sobre corrección de perspectiva](https://github.com/GitSantiagopf/technical_test_efiempresa/blob/main/docs/Homografy.pdf)")
 
 st.markdown("<p class='footer'>Estimador de Velocidad</p>", unsafe_allow_html=True)

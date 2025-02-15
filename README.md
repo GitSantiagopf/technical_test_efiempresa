@@ -2,6 +2,38 @@
 
 Este proyecto permite detectar la velocidad de una pelota en un video subido por el usuario utilizando FastAPI y Streamlit.
 
+##  Estructura del proyectp
+
+project-root/
+├── backend/                    # API en FastAPI para el procesamiento del video
+│   ├── main.py                  # Punto de entrada de la API
+│   ├── ball_tracker.py          # Detección de la pelota y cálculo de velocidad
+│   ├── uploads/                 # Carpeta para almacenar videos subidos
+│   ├── __init__.py              
+├── frontend/                   # Interfaz en Streamlit
+│   ├── streamlit_app.py         # Aplicación principal en Streamlit
+│   ├── pages/                   # Subpáginas de la interfaz
+│   │   ├── home.py               # Página de inicio
+│   │   ├── velocity_estimation.py # Página de estimación de velocidad
+│   ├── static/                  # Archivos estáticos (CSS, imágenes)
+│   │   ├── style.css             # Estilos personalizados
+│   ├── temp/                    # Almacenamiento temporal de videos
+├── src/                         # Módulos de procesamiento
+│   ├── constants.py             # Parámetros generales del sistema
+│   ├── calculate_velocity.py    # Módulo para cálculo de velocidad
+│   ├── __init__.py              
+├── docs/                        # Documentación del proyecto
+│   ├── homography.pdf           # Documento de corrección de perspectiva
+│   ├── user_manual.pdf          # Manual de usuario
+│   ├── technical_doc.pdf        # Documentación técnica detallada
+├── tests/                       # Pruebas y experimentación
+│   ├── extract_frames.py        # Extracción de frames de prueba
+│   ├── ball_frames_detection.py # Pruebas de detección de pelota en frames
+├── requirements.txt             # Dependencias del proyecto
+├── README.md                    # Instrucciones de uso y despliegue
+├── .gitignore                    # Archivos a ignorar en Git
+
+
 ## Características
 
 Detección de la pelota basada en color.
