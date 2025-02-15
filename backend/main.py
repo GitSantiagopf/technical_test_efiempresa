@@ -1,3 +1,13 @@
+"""
+main.py
+
+Este módulo inicia el servidor FastAPI para procesar videos y calcular la velocidad 
+de una pelota en movimiento utilizando el detector `BallTracker`.`BallTracker`
+
+Endpoints:
+    - `POST /upload/`: Recibe un video, lo procesa y devuelve la velocidad estimada.
+
+"""
 from fastapi import FastAPI, UploadFile, File
 import os
 import shutil
@@ -6,28 +16,32 @@ from backend.ball_tracker import BallTracker
 
 app = FastAPI()
 
-# Carpeta para guardar los videos subidos y procesados
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.post("/upload/")
-async def upload_video(video: UploadFile = File(...)):
-    """Recibe un video, lo guarda y procesa la velocidad de la pelota."""
+async def upload_video(video: UploadFile = File(...), distance_real: float = 1.45):
+    """
+    Recibe un video subido por el usuario, lo guarda en el servidor, procesa la detección 
+    de la pelota y calcula su velocidad.
+    Args:
+        video (UploadFile): Archivo de video en formato `.mp4`, `.avi` o `.mov`.
+    Returns:
+        dict: Contiene un mensaje de confirmación, la velocidad estimada y la ruta del video procesado.
+    """
     video_path = os.path.join(UPLOAD_FOLDER, video.filename)
     
     with open(video_path, "wb") as buffer:
         shutil.copyfileobj(video.file, buffer)
     
-    # Procesar el video con BallTracker
     output_video_path = os.path.join(UPLOAD_FOLDER, "processed_" + video.filename)
-    tracker = BallTracker(source=video_path, output_path=output_video_path)
+    tracker = BallTracker(source=video_path, output_path=output_video_path, distance_real = distance_real)
     velocidad = tracker.run()
     
-    print(f"📥 Recibiendo video: {video.filename}")
-    print(f"✅ Video guardado en: {video_path}")
-    print(f"⚡ Velocidad calculada: {velocidad}")
+    print(f"Recibiendo video: {video.filename}")
+    print(f"Video guardado en: {video_path}")
+    print(f"Velocidad calculada: {velocidad}")
     
-    # Si no se detectó la velocidad, devolvemos 0
     if velocidad is None:
         velocidad = 0
 

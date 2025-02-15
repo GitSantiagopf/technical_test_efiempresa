@@ -1,3 +1,11 @@
+"""
+ball_frames_detection.py
+
+Este script procesa fotogramas extraídos de un video para detectar una pelota utilizando filtrado de color en el espacio HSV y operaciones morfológicas.
+
+Uso:
+    Ejecutar este script para detectar la pelota en cada fotograma y visualizar los resultados.
+"""
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt

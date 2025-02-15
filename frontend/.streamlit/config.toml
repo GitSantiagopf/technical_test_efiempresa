@@ -10,4 +10,4 @@ font="sans serif"
 headless = true
 
 [ui]
-hideSidebarNav = true  # ✅ Oculta el menú lateral al inicio
+hideSidebarNav = true

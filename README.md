@@ -2,11 +2,14 @@
 
 Este proyecto permite detectar la velocidad de una pelota en un video subido por el usuario utilizando FastAPI y Streamlit.
 
-## 📌 Características
+## Características
 
-✅ Detección de la pelota basada en color.✅ Cálculo automático de la velocidad en m/s.✅ Interfaz intuitiva con Streamlit.✅ Descarga del video procesado.
+Detección de la pelota basada en color.
+Cálculo automático de la velocidad en m/s.
+Interfaz intuitiva con Streamlit.
+Descarga del video procesado.
 
-## 📌 Instalación y Uso
+## Instalación y Uso
 
 1️⃣ Clonar el repositorio e instalar librerías:
 ```bash
@@ -25,9 +28,9 @@ uvicorn main:app --reload
 cd frontend
 streamlit run streamlit_app.py
 ```
-📌 La aplicación estará disponible en http://localhost:8501.
+La aplicación estará disponible en http://localhost:8501.
 
-## 📌 API - Endpoint
+## API - Endpoint
 
 🔹 Subir y procesar un video:
 
@@ -35,8 +38,8 @@ streamlit run streamlit_app.py
 POST /upload/
 ```
 
-📩 Parámetro: Archivo de video (.mp4, .avi, .mov)
-🔄 Respuesta:
+Parámetro: Archivo de video (.mp4, .avi, .mov)
+Respuesta:
 ```bash
 {
   "message": "Procesamiento completo",
@@ -44,7 +47,7 @@ POST /upload/
   "video_path": "backend/uploads/processed_video.mp4"
 }
 ```
-📌 Tecnologías Utilizadas
+Tecnologías Utilizadas
 
 Python 3.10
 FastAPI
