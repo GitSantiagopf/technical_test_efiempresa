@@ -3,7 +3,7 @@
 Este proyecto permite detectar la velocidad de una pelota en un video subido por el usuario utilizando FastAPI y Streamlit.
 
 ##  Estructura del proyectp
-
+```
 project-root/
 ├── backend/                    # API en FastAPI para el procesamiento del video
 │   ├── main.py                  # Punto de entrada de la API
@@ -31,9 +31,8 @@ project-root/
 │   ├── ball_frames_detection.py # Pruebas de detección de pelota en frames
 ├── requirements.txt             # Dependencias del proyecto
 ├── README.md                    # Instrucciones de uso y despliegue
-├── .gitignore                    # Archivos a ignorar en Git
-
-
+├── .gitignore                   # Archivos a ignorar en Git
+```
 ## Características
 
 Detección de la pelota basada en color.
@@ -82,6 +81,9 @@ Respuesta:
 Tecnologías Utilizadas
 
 Python 3.10
+
 FastAPI
+
 OpenCV
+
 Streamlit
